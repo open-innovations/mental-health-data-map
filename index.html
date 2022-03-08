@@ -119,9 +119,9 @@
 
         function getStyle(name) {
           const index = data.ccg.indexOf(name);
-          const series = Object.values(data.data[field]);
-          const seriesMax = Math.max(...series);
-          const value = 0.75 * series[index] / seriesMax;
+          const seriesMax = Math.max(...series.filter(x => x));
+          const seriesMin = Math.min(...series.filter(x => x));
+          const value = 0.75 * (series[index] - seriesMin) / (seriesMax - seriesMin);
           return {
             weight: 1,
             fillOpacity: value,
