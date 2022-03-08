@@ -19,16 +19,34 @@
     body,
     html {
       height: 100%;
+      margin: 0;
     }
-
-    #map {
-      height: 100%;
+    .two-pane {
+      height: 700px;
+      display: flex;
+      align-items: stretch;
+    }
+    .two-pane * {
+      flex-grow: 1;
+    }
+    .map {
+      height: 600px;
     }
   </style>
 </head>
 
 <body>
-  <div id="map"></div>
+  <main role="main">
+    <h1>Mental Health Outcome Data</h1>
+    <div class="two-pane">
+      <div id="map-a">
+        <div class="map"></div>
+      </div>
+      <div id="map-b">
+        <div class="map"></div>
+      </div>
+    </div>
+  </main>
   <script>
     async function loadData(url) {
       const resp = await fetch(url);
@@ -39,16 +57,23 @@
         data: data,
       }
     }
-    async function init() {
+
+    async function init(id) {
       const resp = await fetch('./data/Clinical_Commissioning_Groups_(April_2021)_EN_BSC.geojson');
       const data = await loadData('./data/data.json');
-      const field = 'NWB_pct';
 
-      var c = '#ccc';
+      let field = undefined;
+      let series = undefined;
+
+      function setValues(fieldName) {
+        field = fieldName;
+        series = Object.values(data.data[field])
+      }
+
+      setValues('NWB_pct');
 
       const getStyle = (name) => {
         const index = data.ccg.indexOf(name);
-        console.log(index);
         const series = Object.values(data.data[field]);
         const seriesMax = Math.max(...series);
         const value = 0.75 * series[index] / seriesMax;
@@ -66,7 +91,8 @@
         }
       }).bindPopup((layer) => layer.feature.properties.CCG21NM)
 
-      var map = L.map('map').fitBounds(geoJsonLayer.getBounds());
+      var mapEl = document.querySelector(`#${id} .map`);
+      var map = L.map(mapEl).fitBounds(geoJsonLayer.getBounds());
 
       // https://leaflet-extras.github.io/leaflet-providers/preview/
       var baseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -78,15 +104,16 @@
       baseLayer.addTo(map);
       geoJsonLayer.addTo(map);
 
-
-
       function repaintMap() {
         geoJsonLayer.setStyle((feature) => {
           return getStyle(feature.properties.CCG21CD);
         })
       }
     }
-    window.addEventListener('DOMContentLoaded', init);
+    window.addEventListener('DOMContentLoaded', () => {
+      init('map-a');
+      init('map-b');
+    });
   </script>
 </body>
 
