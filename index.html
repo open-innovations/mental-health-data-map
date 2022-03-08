@@ -14,6 +14,8 @@
   <script src="./vendor/leaflet.js"
     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
     crossorigin=""></script>
+  <script src="./vendor/L.Map.Sync.js"
+    crossorigin=""></script>
 
   <style>
     body,
@@ -133,10 +135,13 @@
             return getStyle(feature.properties.CCG21CD);
           })
         }
+        return map;
       }
 
-      initMap('map-a');
-      initMap('map-b');
+      const mapA = initMap('map-a');
+      const mapB = initMap('map-b');
+      mapA.sync(mapB, { syncCursor: true });
+      mapB.sync(mapA, { syncCursor: true });
     }
     window.addEventListener('DOMContentLoaded', init);
   </script>
