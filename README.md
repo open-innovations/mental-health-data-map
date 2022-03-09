@@ -15,7 +15,7 @@ In principle, this could be expanded to include any information that could be ma
 
 The [CMHS (Community Mental Health Survey)][CMHS_PAGE] is an annual survey which looks at the experiences of people who use community mental health services.
 
-The survey covers the period from September to November 2021 (which defines the timing of the rest of the mental health data).
+The survey covers the period from September to November 2020 (which defines the timing of the rest of the mental health data).
 
 The [cmhs.ipynb][CMHS_JUPYTER] workbook contains code to download an process this data from source into the required format.
 Processing comprises concatenating the Trust Respondents and Trust Scores files before summmarising at CCG level and dropping some columns.
