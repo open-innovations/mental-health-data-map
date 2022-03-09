@@ -1,6 +1,6 @@
 # mental-health-data-map
 
-> This is a repository / visualisation pulled together as part of the Open Data Saves Lives [innovation working session held at Open Innvoations on 7th and 8th March 2021][EVENT_1].
+> This is a repository / visualisation pulled together as part of the Open Data Saves Lives [innovation working session held at Open Innvoations on 7th and 8th March 2022][EVENT_1].
 
 **TL;DR** There is a [visualisation][VIZ] if you just want to explore the data.
 
