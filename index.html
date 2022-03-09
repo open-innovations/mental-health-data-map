@@ -16,6 +16,7 @@
     crossorigin=""></script>
   <script src="./vendor/L.Map.Sync.js"
     crossorigin=""></script>
+  <script src="./vendor/oi.linechart.min.js"></script>
 
   <style>
     body,
@@ -25,7 +26,6 @@
     }
 
     .two-pane {
-      height: 700px;
       display: flex;
       align-items: stretch;
     }
@@ -35,8 +35,9 @@
     }
 
     .map {
-      height: 600px;
+      height: 500px;
     }
+    .chart { height: 300px; width: 100%; margin-top: 1em; position: relative; animation-duration: 0.3s; }
   </style>
 </head>
 
@@ -47,6 +48,7 @@
       <div id="map-a"></div>
       <div id="map-b"></div>
     </div>
+    <div id="chart" class="chart"></div>
   </main>
   <script>
     async function loadData(url) {
@@ -68,7 +70,8 @@
       const geoJson = await resp.json();
       const data = await loadData('./data/data.json');
 
-      function initMap(id) {
+      function initMap(id, options = {}) {
+        const { callback = () => {} } = options;
         const geoJsonLayer = L.geoJSON(geoJson).bindPopup((layer) => layer.feature.properties.CCG21NM)
 
         let field = undefined;
@@ -92,6 +95,7 @@
         selectEl.addEventListener('change', (e) => {
           setValues(e.target.value);
           repaintMap();
+          callback();
         })
         repaintMap();
 
@@ -135,13 +139,45 @@
             return getStyle(feature.properties.CCG21CD);
           })
         }
-        return map;
+        return { map, data: () => ({ field, series }) };
       }
 
-      const mapA = initMap('map-a');
-      const mapB = initMap('map-b');
-      mapA.sync(mapB, { syncCursor: true });
-      mapB.sync(mapA, { syncCursor: true });
+      const chart = OI.linechart(document.getElementById('chart'), {
+    		left: 50,
+    		right: 10,
+    		top: 10,
+    		bottom: 50,
+      });
+
+      const mapA = initMap('map-a', { callback: updateChart });
+      const mapB = initMap('map-b', { callback: updateChart });
+      mapA.map.sync(mapB.map, { syncCursor: true });
+      mapB.map.sync(mapA.map, { syncCursor: true });
+
+      function updateChart() {
+        const xData = mapA.data();
+        const yData = mapB.data();
+
+        const chartSeries = xData.series.map((x, i) => ({ x, y: yData.series[i]}))
+
+        if (chart.series) {
+          chart.series[0].setData(chartSeries);
+        } else {
+          chart.addSeries(chartSeries, {
+            line: { show: false },
+            points: { size: 4 }
+          });
+        }
+        chart.setProperties({
+          axis: {
+            x: { title: { label: xData.field } },
+            y: { title: { label: yData.field } },
+          }
+        })
+        chart.draw();
+      }
+
+      updateChart();
     }
     window.addEventListener('DOMContentLoaded', init);
   </script>
