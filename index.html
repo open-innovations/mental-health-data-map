@@ -64,7 +64,7 @@
     );
 
     async function init() {
-      const resp = await fetch('./data/Clinical_Commissioning_Groups_(April_2021)_EN_BSC.geojson');
+      const resp = await fetch('./data/ccg21.geojson');
       const geoJson = await resp.json();
       const data = await loadData('./data/data.json');
 
