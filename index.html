@@ -142,7 +142,7 @@ title: Mental Health Outcome Data
             return getStyle(feature.properties.CCG21CD);
           })
         }
-        return { map, data: () => ({ field, series }) };
+        return { map, data: () => ({ field, series }), recentre: () => map.fitBounds(geoJson.getBounds()) };
       }
 
       const chart = OI.linechart(document.getElementById('chart'), {
@@ -156,6 +156,8 @@ title: Mental Health Outcome Data
       const mapB = initMap('map-b', { callback: updateChart });
       mapA.map.sync(mapB.map, { syncCursor: true });
       mapB.map.sync(mapA.map, { syncCursor: true });
+
+      mapA.recentre();
 
       function updateChart() {
         const xData = mapA.data();
