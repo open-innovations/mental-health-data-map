@@ -35,12 +35,24 @@ title: Mental Health Outcome Data
     .chart { height: 300px; width: 100%; margin-top: 1em; position: relative; animation-duration: 0.3s; }
   </style>
 
-    <div class="two-pane">
-      <div id="map-a"></div>
-      <div id="map-b"></div>
-    </div>
-    <div id="chart" class="chart"></div>
-  </main>
+  <div>
+    <p>
+      This visualisation was created during the Open Data Saves Lives innovation working session held at Open Innvoations on 7th and 8th March 2022.
+      It is an exploration of some Mental Health datasets, along with demographic information, such as ethnic origin and population.
+    </p>
+    <p>
+      The datasets are summarised by Clinical Consulting Group, these being presented as the shapes on the map.
+      Each map presents the dataset selected in the dropdown list above them.
+      These datasets are then graphed in below the maps to quickly highlight potential correlations.
+    </p>
+  </div>
+
+  <div class="two-pane">
+    <div id="map-a"></div>
+    <div id="map-b"></div>
+  </div>
+  <div id="chart" class="chart"></div>
+
   <script>
     async function loadData(url) {
       const resp = await fetch(url);
